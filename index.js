@@ -1,10 +1,12 @@
 const contacts = require("./db");
+const { Command } = require("commander");
+const program = new Command();
 
 async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case "list":
       const allContacts = await contacts.listContacts();
-      return console.log(allContacts);
+      return console.table(allContacts);
 
     case "get":
       const contact = await contacts.getContactById(id);
@@ -23,14 +25,13 @@ async function invokeAction({ action, id, name, email, phone }) {
   }
 }
 
-// invokeAction({ action: "list" });
-// invokeAction({ action: "get", id: "AeHIrLTr6JkxGE6SN-0Rw" });
-// invokeAction({ action: "get", id: "AeHIrLTr6JkxGE6SN" });
-// invokeAction({ action: "remove", id: "AeHIrLTr6JkxGE6SN-0Rw" });
-// invokeAction({
-//   action: "add",
-//   name: "Kennedy Lane",
-//   email: "nibh@semsempererat.com",
-//   phone: "(715) 598-5792",
-// });
-// invokeAction({ action: "remove", id: "n63k6f_G96c75Jb3Wov0E" });
+program
+  .option("-a, --action, <type>")
+  .option("-id, --id, <type>")
+  .option("-n, --name, <type>")
+  .option("-e, --email, <type>")
+  .option("-p, --phone, <type>");
+
+program.parse();
+
+invokeAction(program.opts());
